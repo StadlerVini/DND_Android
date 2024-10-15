@@ -12,7 +12,6 @@ class DistributeAttributesActivity : AppCompatActivity() {
 
     private lateinit var radioGroupModo: RadioGroup
     private lateinit var rbInserir: RadioButton
-    private lateinit var rbAleatorio: RadioButton
 
     private lateinit var etForca: EditText
     private lateinit var etDestreza: EditText
@@ -31,7 +30,7 @@ class DistributeAttributesActivity : AppCompatActivity() {
 
         radioGroupModo = findViewById(R.id.radioGroupModo)
         rbInserir = findViewById(R.id.rb_inserir)
-        rbAleatorio = findViewById(R.id.rb_aleatorio)
+
 
         etForca = findViewById(R.id.et_forca)
         etDestreza = findViewById(R.id.et_destreza)
@@ -67,8 +66,6 @@ class DistributeAttributesActivity : AppCompatActivity() {
                         "carisma" to etCarisma.text.toString().toInt()
                     )
                     Escolha.escolhaAtributos(personagem, atributos, 1)
-                } else if (rbAleatorio.isChecked) {
-                    Escolha.escolhaAtributos(personagem, emptyMap(), 2)
                 } else {
                     Toast.makeText(this, "Por favor, selecione um modo de distribuição.", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener

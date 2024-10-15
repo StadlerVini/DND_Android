@@ -68,10 +68,10 @@ open class Escolha {
           pontos -= valor
           when (atributo.lowercase()) {
             "forca" -> char.forca =
-              Util.modificadorHabilidade(8 + valor + char.raca.buffForca).toInt()
+              Util.modificarHabilidade(8 + valor + char.raca.buffForca).toInt()
 
             "destreza" -> char.destreza =
-              Util.modificadorHabilidade(8 + valor + char.raca.buffDestreza).toInt()
+              Util.modificarHabilidade(8 + valor + char.raca.buffDestreza).toInt()
 
             "constituicao" -> {
               // Calcula o valor final da constituição com base em 8 (mínimo) mais o valor distribuído e o buff da raça
@@ -79,7 +79,7 @@ open class Escolha {
 
               // Calcula a vida: vida base da classe + modificador baseado na constituição
               // Util.modificadorHabilidade retorna o modificador, então você aplica isso à vida
-              val modificadorConstituicao = Util.modificadorHabilidade(char.constituicao).toInt()
+              val modificadorConstituicao = Util.modificarHabilidade(char.constituicao).toInt()
 
               // Vida da classe somada ao modificador de constituição (que influencia os pontos de vida adicionais)
               char.vida = char.classe.vidaClasse + modificadorConstituicao
@@ -87,13 +87,13 @@ open class Escolha {
 
 
             "inteligencia" -> char.inteligencia =
-              Util.modificadorHabilidade(8 + valor + char.raca.buffInteligencia).toInt()
+              Util.modificarHabilidade(8 + valor + char.raca.buffInteligencia).toInt()
 
             "sabedoria" -> char.sabedoria =
-              Util.modificadorHabilidade(8 + valor + char.raca.buffSabedoria).toInt()
+              Util.modificarHabilidade(8 + valor + char.raca.buffSabedoria).toInt()
 
             "carisma" -> char.carisma =
-              Util.modificadorHabilidade(8 + valor + char.raca.buffCarisma).toInt()
+              Util.modificarHabilidade(8 + valor + char.raca.buffCarisma).toInt()
 
             else -> throw IllegalArgumentException("Atributo inválido: $atributo")
           }
@@ -101,20 +101,6 @@ open class Escolha {
         if (pontos != 0) {
           throw IllegalArgumentException("Todos os 27 pontos devem ser distribuídos.")
         }
-      } else if (modo == 2) {
-        // Modo Aleatório: utilizar rolagem de dados
-        char.forca =
-          Util.modificadorHabilidade(Util.rolagemAtributos() + char.raca.buffForca).toInt()
-        char.destreza =
-          Util.modificadorHabilidade(Util.rolagemAtributos() + char.raca.buffDestreza).toInt()
-        char.constituicao = 8 + Util.rolagemAtributos() + char.raca.buffConstituicao
-        char.vida = char.classe.vidaClasse + Util.modificadorHabilidade(char.constituicao).toInt()
-        char.inteligencia =
-          Util.modificadorHabilidade(Util.rolagemAtributos() + char.raca.buffInteligencia).toInt()
-        char.sabedoria =
-          Util.modificadorHabilidade(Util.rolagemAtributos() + char.raca.buffSabedoria).toInt()
-        char.carisma =
-          Util.modificadorHabilidade(Util.rolagemAtributos() + char.raca.buffCarisma).toInt()
       }
     }
   }
