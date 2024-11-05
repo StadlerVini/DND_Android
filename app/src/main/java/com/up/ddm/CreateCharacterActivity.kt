@@ -6,8 +6,14 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import PersonagemPack.Personagem
 import UtilPack.Escolha
+import android.annotation.SuppressLint
+import android.util.Log
+import androidx.room.Room
+import com.up.ddm.data.PersonagemDao
+import com.up.ddm.data.PersonagemDatabase
 
 class CreateCharacterActivity : AppCompatActivity() {
+    lateinit var personagemDao: PersonagemDao
 
     private lateinit var etNome: EditText
     private lateinit var spinnerRaca: Spinner
@@ -26,9 +32,18 @@ class CreateCharacterActivity : AppCompatActivity() {
         "Feiticeiro", "Guardião", "Guerreiro", "Ladino", "Mago", "Monge"
     )
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_character)
+
+        val database = Room.databaseBuilder(
+            this,
+            PersonagemDatabase::class.java,
+            "rpg_database" // Nome da sua base de dados
+        ).build()
+
+        personagemDao = database.personagemDao()
 
         etNome = findViewById(R.id.et_nome)
         spinnerRaca = findViewById(R.id.spinner_raca)
@@ -46,7 +61,7 @@ class CreateCharacterActivity : AppCompatActivity() {
 
         btnContinuar.setOnClickListener {
             val nome = etNome.text.toString().trim()
-            val racaSelecionada = spinnerRaca.selectedItemPosition + 1 // Considerando que a lista começa em 1
+            val racaSelecionada = spinnerRaca.selectedItemPosition + 1
             val classeSelecionada = spinnerClasse.selectedItemPosition + 1
 
             if (nome.isEmpty()) {
@@ -55,19 +70,27 @@ class CreateCharacterActivity : AppCompatActivity() {
             }
 
             try {
-                val personagem = Personagem()
-                Escolha.escolhaNome(personagem, nome)
-                Escolha.escolhaRaca(personagem, racaSelecionada)
-                Escolha.escolhaClasse(personagem, classeSelecionada)
+                val personagem = Personagem().apply {
+                    Escolha.escolhaNome(this, nome)
+                    Escolha.escolhaRaca(this, racaSelecionada)
+                    Escolha.escolhaClasse(this, classeSelecionada)
+                }
 
-                // Passar o personagem para a próxima activity
+                // Passa o personagem para a próxima atividade
                 val intent = Intent(this, DistributeAttributesActivity::class.java)
                 intent.putExtra("personagem", personagem)
                 startActivity(intent)
 
             } catch (e: Exception) {
-                Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
+                Log.e("MeuApp", "Erro ao criar personagem: ${e.message}", e)
+                Toast.makeText(this, "Não foi possível criar o personagem.", Toast.LENGTH_LONG).show()
             }
+        }
+        val btnVerPersonagens = findViewById<Button>(R.id.btn_ver_personagens)
+
+        btnVerPersonagens.setOnClickListener {
+            val intent = Intent(this, ListCharactersActivity::class.java)
+            startActivity(intent)
         }
     }
 }
